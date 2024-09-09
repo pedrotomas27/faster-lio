@@ -1,0 +1,52 @@
+common:
+    
+    lid_topic: "/rslidar_points" 
+    #lid_topic: "/velodyne_points" 
+    imu_topic: "/filtered_imu_data"
+    con_frame: false # true: if you need to combine several LiDAR frames into one
+    con_frame_num: 1 # the number of frames combined
+    cut_frame: false # true: if you need to cut one LiDAR frame into several subframes
+    cut_frame_time_interval: 0.1 # should be integral fraction of 1 / LiDAR frequency   
+    time_lag_imu_to_lidar: 0.0 # Time offset between LiDAR and IMU calibrated by other algorithms, e.g., LI-Init (find in Readme)
+                                # the timesample of IMU is transferred from the current timeline to LiDAR's timeline by subtracting this value
+
+preprocess:
+    lidar_type: 5              # 1 for Livox serials LiDAR, 2 for Velodyne LiDAR, 3 for ouster LiDAR, 
+    scan_line: 32
+    scan_rate: 10                # only need to be set for velodyne, unit: Hz,
+    timestamp_unit: 0            # the unit of time/t field in the PointCloud2 rostopic: 0-second, 1-milisecond, 2-microsecond, 3-nanosecond.
+    blind: 4
+
+mapping:
+    acc_cov: 0.01
+    gyr_cov: 0.01
+    b_acc_cov: 0.0001
+    b_gyr_cov: 0.0001
+    fov_degree:    360
+    det_range:     100.0
+    extrinsic_est_en:  false    # true: enable the online estimation of IMU-LiDAR extrinsic,
+    extrinsic_T: [0.16592 0.06659 0.13617]
+    extrinsic_R: [0.9526330, 0, 0.3041224,
+              0, 1, 0,
+              -0.3041224, 0, 0.9526330]
+
+publish:
+    path_en:  true
+    scan_publish_en:  true       # false: close all the point cloud output
+    dense_publish_en: true       # false: low down the points number in a global-frame point clouds scan.
+    scan_bodyframe_pub_en: false  # true: output the point cloud scans in IMU-body-frame
+
+pcd_save:
+    pcd_save_en: true
+    interval: -1                 # how many LiDAR frames saved in each pcd file; 
+
+feature_extract_enable: true
+point_filter_num: 5
+max_iteration: 10
+filter_size_surf: 0.5
+filter_size_map: 0.5
+cube_side_length: 1000
+
+ivox_grid_resolution: 0.5      # default=0.2
+ivox_nearby_type: 26             # 6, 18, 26
+esti_plane_threshold: 0.5        # default=0.1

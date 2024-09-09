@@ -5,13 +5,9 @@
     <node pkg="tf" type="static_transform_publisher" name="lidar_0_broadcaster" args="0.15 0 0.13 0 0.23 0 base lidar_0 0.1" />
     <node pkg="tf" type="static_transform_publisher" name="camera_link_broadcaster" args="0.16 0 0.06 0 0 0 base camera_link 0.1" />
     <node pkg="python_executables" type="Unitree_tranformer.py" name="Unitree_tranformer" output="screen" />
-    
     <node pkg="python_executables" type="imu_filter.py" name="imu_filter" output="screen" />
-    
     <node pkg="python_executables" type="aldra.py" name="aldra" output="screen" />
-    
     <node pkg="python_executables" type="navtogps.py" name="navtogps" output="screen" />
-    
     <rosparam command="load" file="$(find faster_lio)/config/velodyne.yaml" />
     
     <param name="feature_extract_enable" type="bool" value="0"/>
@@ -23,7 +19,7 @@
     <param name="runtime_pos_log_enable" type="bool" value="0" />
     <node pkg="faster_lio" type="run_mapping_online" name="laserMapping" output="screen" /> 
      <!--- Robot State TF -->
-    <!--- <include file="$(find lio_sam_6axis)/launch/include/module_robot_state_publisher.launch"/> -->
+    <include file="$(find lio_sam_6axis)/launch/include/module_robot_state_publisher.launch"/>
     <node pkg="imu_filter_madgwick" type="imu_filter_node" name="imu_filter_madgwick" output="screen">
         <param name="use_mag" value="false"/>
         <param name="publish_tf" value="false"/>

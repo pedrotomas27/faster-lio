@@ -24,7 +24,27 @@ POINT_CLOUD_REGISTER_POINT_STRUCT(velodyne_ros::Point,
                                   (float, x, x)(float, y, y)(float, z, z)(float, intensity, intensity)
                                       (float, time, time)(std::uint16_t, ring, ring))
 // clang-format on
-
+namespace v_m1600_ros {
+  struct EIGEN_ALIGN16 Point {
+      PCL_ADD_POINT4D;
+      uint8_t intensity;
+      //float time;
+      uint32_t timestampSec;
+      uint32_t timestampNsec;
+      uint8_t ring;
+      EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+  };
+}  // namespace v_m1600
+POINT_CLOUD_REGISTER_POINT_STRUCT(v_m1600_ros::Point,
+    (float, x, x)
+    (float, y, y)
+    (float, z, z)
+    (std::uint8_t, intensity, intensity)
+    //(float, time, time)
+    (std::uint32_t, timestampSec, timestampSec)
+    (std::uint32_t, timestampNsec, timestampNsec)
+    (std::uint8_t , ring, ring)
+)
 namespace ouster_ros {
 struct EIGEN_ALIGN16 Point {
     PCL_ADD_POINT4D;
@@ -52,10 +72,31 @@ POINT_CLOUD_REGISTER_POINT_STRUCT(ouster_ros::Point,
                                   (std::uint32_t, range, range)
                                   )
 // clang-format on
+namespace hesai_ros {
+struct EIGEN_ALIGN16 Point {
+    PCL_ADD_POINT4D;
+    float intensity;
+    double timestamp;
+    uint16_t ring;
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+};
+}  // namespace hesai_ros
+
+// clang-format off
+POINT_CLOUD_REGISTER_POINT_STRUCT(hesai_ros::Point,
+                                  (float, x, x)
+                                  (float, y, y)
+                                  (float, z, z)
+                                  (float, intensity, intensity)
+                                  (double, timestamp, timestamp)
+                                  (std::uint16_t, ring, ring)
+)
+// clang-format on
+
 
 namespace faster_lio {
 
-enum class LidarType { AVIA = 1, VELO32, OUST64 };
+enum class LidarType { AVIA = 1, VELO32, OUST64, VM1600,  HESAIxt32 };
 
 /**
  * point cloud preprocess
@@ -86,6 +127,8 @@ class PointCloudPreprocess {
     void AviaHandler(const livox_ros_driver::CustomMsg::ConstPtr &msg);
     void Oust64Handler(const sensor_msgs::PointCloud2::ConstPtr &msg);
     void VelodyneHandler(const sensor_msgs::PointCloud2::ConstPtr &msg);
+    void VM1600Handler(const sensor_msgs::PointCloud2::ConstPtr &msg);
+    void HesaiHandler(const sensor_msgs::PointCloud2::ConstPtr &msg);
 
     PointCloudType cloud_full_, cloud_out_;
 
